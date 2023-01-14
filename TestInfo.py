@@ -23,7 +23,7 @@ class TestInfo :
                         self.site.append(['SITE1', 'SITE2', 'SITE3', 'SITE4'])
                         self.pgm.append(['PGM1_1', 'PGM1_2', 'PGM1_3', 'PGM1_4'])
                         self.additional_cal_site.append(self.__SetAdditionalCalSite(tester, 'None'))
-                    
+
                     case TESTER.TESTER2 :
                         self.num_site.append(5)
                         self.pc.append(['TESTER2_1','TESTER2_2', 'TESTER2_3'])
@@ -42,6 +42,8 @@ class TestInfo :
                 self.__ReturnDataLenError()
 
             cls._post_init = True
+
+        else : self.__ReturnSingletonError()
 
     def __new__(cls, *args, **kwargs) :
         if not hasattr(cls, "_instance"):
@@ -75,7 +77,12 @@ class TestInfo :
 
     def __ReturnArgError(self) :
         traceback.print_stack(limit=4)
-        return sys.exit(f"Failed to run method : \'{sys._getframe(1).f_code.co_name}\' doesn't have appropriate parameters.")
+        return sys.exit(f"Failed to initialize TestInfo. : \'{sys._getframe(1).f_code.co_name}\' doesn't have appropriate parameters.")
+
+    @classmethod
+    def __ReturnSingletonError(cls) :
+        traceback.print_stack(limit=4)
+        return sys.exit("Failed to initialize Testinfo. : TestInfo re-instantiated")
 
 if __name__ == '__main__' :
     test_info = TestInfo()
