@@ -43,7 +43,7 @@ class TestInfo :
 
             cls._post_init = True
 
-        else : self.__ReturnSingletonError()
+        else : TestInfo.__ReturnSingletonError()
 
     def __new__(cls, *args, **kwargs) :
         if not hasattr(cls, "_instance"):
