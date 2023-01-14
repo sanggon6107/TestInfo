@@ -1,6 +1,7 @@
 from PyEnum import *
 from dataclasses import dataclass, field
 import sys
+import traceback
 
 
 @dataclass(frozen=True)
@@ -38,7 +39,7 @@ class TestInfo :
                         self.additional_cal_site.append(self.__SetAdditionalCalSite(tester, 0, 1, 5))
 
             if not self.__CheckDataLen() :
-                sys.exit("Failed to initialize TestInfo. : The length of the fields in TestInfo doesn't match")
+                self.__ReturnDataLenError()
 
             cls._post_init = True
 
@@ -55,18 +56,26 @@ class TestInfo :
     def __SetAdditionalCalSite(self, tester, *argv) -> list :
         if argv == ('None', ) :
             try : return [False for _ in range(len(self.site[tester]))]
-            except IndexError : sys.exit("Failed to initialize TestInfo. : The length of the fields in TestInfo doesn't match")
+            except IndexError : self.__ReturnDataLenError()
 
         elif argv == ('All', ) :
             try : return [True for _ in range(len(self.site[tester]))]
-            except IndexError : sys.exit("Failed to initialize TestInfo. : The length of the fields in TestInfo doesn't match")
+            except IndexError : self.__ReturnDataLenError()
             
         elif all(isinstance(n, int) for n in argv) :
             try : return [i in argv for i in range(len(self.site[tester]))]
-            except IndexError : sys.exit("Failed to initialize TestInfo. : The length of the fields in TestInfo doesn't match")
+            except IndexError : self.__ReturnDataLenError()
         
         else :
-            sys.exit("Faield to initialize additional_cal_site : \'__SetAdditionalCalSite\' doesn't have appropriate parameters.")
+            self.__ReturnArgError()
+
+    def __ReturnDataLenError(self) :
+        traceback.print_stack(limit=4)
+        return sys.exit("Failed to initialize TestInfo. : The length of the fields in TestInfo doesn't match.")
+
+    def __ReturnArgError(self) :
+        traceback.print_stack(limit=4)
+        return sys.exit(f"Failed to run method : \'{sys._getframe(1).f_code.co_name}\' doesn't have appropriate parameters.")
 
 if __name__ == '__main__' :
     test_info = TestInfo()
