@@ -1,5 +1,5 @@
 from PyEnum import *
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 import sys
 import traceback
 
@@ -51,8 +51,10 @@ class TestInfo :
         return cls._instance
 
     def __CheckDataLen(self) -> bool :
-        if not (len(self.num_site) == len(self.pc) == len(self.site) == len(self.pgm) == len(self.additional_cal_site)) :
-            return False
+        len_field = [len(getattr(self, field)) for field in self.__annotations__]
+
+        if len(set(len_field)) != 1 : return False
+        if False in [i == len(TESTER) for i in len_field] : return False
         return True
     
     def __SetAdditionalCalSite(self, tester, *argv) -> list :
@@ -84,8 +86,12 @@ class TestInfo :
         traceback.print_stack(limit=4)
         return sys.exit("Failed to initialize Testinfo. : TestInfo re-instantiated")
 
+    def test(self) :
+        print()
+
 if __name__ == '__main__' :
     test_info = TestInfo()
+    test_info.test()
     print(test_info.num_site)
     test_info.num_site[TESTER.TESTER1]=100
     print(test_info.num_site)
