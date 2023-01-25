@@ -12,6 +12,13 @@ class TestInfo :
     pgm                 : list       = field(default_factory=list)
     additional_cal_site : list       = field(default_factory=list)
 
+    #spec type
+    spec1               : str        = 'SPEC1.json'
+    spec2               : str        = 'SPEC2.json'
+    spec3               : str        = 'SPEC3.json'
+    spec4               : str        = 'SPEC4.json'
+
+
     def __post_init__(self) -> None :
         cls = type(self)
         if hasattr(cls, "_post_init") : TestInfo.__ReturnSingletonError()
@@ -49,7 +56,10 @@ class TestInfo :
         return cls._instance
 
     def __CheckDataLen(self) -> bool :
-        len_field = [len(getattr(self, field)) for field in self.__annotations__]
+        len_field = []
+        for field in self.__annotations__ :
+            att = getattr(self, field)
+            if isinstance(att, list) : len_field.append(len(att))
 
         if len(set(len_field)) != 1 : return False
         if False in [i == len(TESTER) for i in len_field] : return False
