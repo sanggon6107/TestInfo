@@ -17,6 +17,9 @@ class TestInfo :
     spec2               : str        = 'SPEC2.json'
     spec3               : str        = 'SPEC3.json'
     spec4               : str        = 'SPEC4.json'
+    
+    #build type
+    buildtypes          : tuple      = tuple(str(build) for build in TESTER)
 
 
     def __post_init__(self) -> None :
@@ -101,3 +104,4 @@ if __name__ == '__main__' :
     test_info.num_site[TESTER.TESTER1]=100
     print(test_info.num_site)
     print(test_info.additional_cal_site[TESTER.TESTER3])
+    print(test_info.buildtypes)
